@@ -5,99 +5,176 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAP Brisbane Oktoberfest Trivia 2026 — Live Scores</title>
 <style>
-  /* ── Fonts ─────────────────────────────────────────────────────── */
   @import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Inter:wght@400;600;700;900&display=swap');
 
-  /* ── CSS Variables ─────────────────────────────────────────────── */
+  /* ── Variables ──────────────────────────────────────────────────── */
   :root {
+    /* SAP Brand */
     --sap-blue: #1B90FF;
     --sap-blue-dark: #0070F2;
     --sap-navy: #002A86;
     --sap-deep-navy: #00144A;
     --sap-light-blue: #89D1FF;
-    --sap-light-sky: #D1EFFF;
     --sap-white: #FFFFFF;
-    --sap-black: #000000;
+
+    /* Oktoberfest Amber */
+    --amber: #F59E0B;
+    --amber-dark: #B45309;
+    --amber-light: #FCD34D;
+    --amber-glow: rgba(245,158,11,0.25);
+    --amber-border: rgba(245,158,11,0.45);
+
+    /* Medals */
     --gold: #FFD700;
-    --silver: #C0C0C0;
+    --gold-glow: rgba(255,215,0,0.3);
+    --silver: #C8D6E5;
     --bronze: #CD7F32;
-    --green-up: #4CAF50;
-    --red-down: #E53935;
-    --bg-gradient: linear-gradient(145deg, #000D2B 0%, #00144A 40%, #001A5C 100%);
+
+    /* Status */
+    --green-up: #22C55E;
+    --red-down: #EF4444;
+
+    /* Backgrounds */
+    --bg-deep: #010812;
+    --bg-panel: rgba(2,12,38,0.85);
+    --bg-card: rgba(1,8,24,0.92);
+    --bg-row: rgba(0,18,56,0.55);
+
+    /* Text */
     --text-primary: #FFFFFF;
-    --text-secondary: #B8D4F0;
-    --text-dim: #7FA8D0;
-    --border-subtle: rgba(27,144,255,0.2);
-    --border-accent: rgba(27,144,255,0.5);
-    --panel-bg: rgba(0,20,74,0.6);
-    --row-bg: rgba(0,42,134,0.25);
-    --input-bg: rgba(0,10,40,0.5);
+    --text-secondary: #A8C8E8;
+    --text-dim: #567A9A;
+    --text-amber: #FCD34D;
+
+    /* Borders */
+    --border-blue: rgba(27,144,255,0.25);
+    --border-blue-mid: rgba(27,144,255,0.45);
+    --input-bg: rgba(0,8,28,0.6);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
 
   body {
     font-family: 'Inter', sans-serif;
-    background: var(--bg-gradient);
+    background: var(--bg-deep);
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
   }
 
-  body::before {
+  /* Stage lighting */
+  body::after {
     content: '';
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image:
-      linear-gradient(45deg, rgba(27,144,255,0.03) 25%, transparent 25%),
-      linear-gradient(-45deg, rgba(27,144,255,0.03) 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, rgba(27,144,255,0.03) 75%),
-      linear-gradient(-45deg, transparent 75%, rgba(27,144,255,0.03) 75%);
-    background-size: 40px 40px;
-    background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 15% 0%, rgba(0,112,242,0.13) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 45% at 85% 0%, rgba(245,158,11,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 100% 55% at 50% 100%, rgba(0,42,134,0.18) 0%, transparent 65%);
     pointer-events: none;
     z-index: 0;
   }
 
-  /* ── Header ────────────────────────────────────────────────────── */
+  /* Bavarian diamond pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(45deg, rgba(27,144,255,0.04) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(27,144,255,0.04) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(245,158,11,0.025) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(245,158,11,0.025) 75%);
+    background-size: 56px 56px;
+    background-position: 0 0, 0 28px, 28px -28px, -28px 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Header ─────────────────────────────────────────────────────── */
   .header {
     text-align: center;
-    padding: 18px 20px 8px;
+    padding: 28px 20px 10px;
     position: relative;
     z-index: 1;
   }
+  .header-inner {
+    display: inline-block;
+    position: relative;
+    padding: 0 50px;
+  }
+  .header-inner::before,
+  .header-inner::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--amber));
+  }
+  .header-inner::before { right: 100%; }
+  .header-inner::after {
+    left: 100%;
+    background: linear-gradient(to left, transparent, var(--amber));
+  }
   .header h1 {
     font-family: 'UnifrakturCook', cursive;
-    font-size: clamp(24px, 3.5vw, 48px);
-    color: var(--sap-light-blue);
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 30px rgba(27,144,255,0.3);
-    letter-spacing: 1px;
+    font-size: clamp(26px, 4.2vw, 56px);
+    color: var(--sap-white);
+    text-shadow:
+      0 0 60px rgba(27,144,255,0.45),
+      0 0 120px rgba(27,144,255,0.15),
+      0 3px 10px rgba(0,0,0,0.8);
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+  .header .event-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 8px;
   }
   .header .subtitle {
-    font-size: clamp(11px, 1.3vw, 16px);
-    color: var(--text-secondary);
-    margin-top: 2px;
-    font-weight: 600;
-    letter-spacing: 2px;
+    font-size: clamp(10px, 1.1vw, 13px);
+    color: var(--text-amber);
+    font-weight: 700;
+    letter-spacing: 4px;
     text-transform: uppercase;
+  }
+  .header .divider-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--amber);
+    opacity: 0.5;
   }
   .round-indicator {
     display: inline-block;
-    margin-top: 6px;
-    padding: 3px 18px;
-    background: var(--sap-blue);
+    margin-top: 10px;
+    padding: 4px 22px;
+    background: linear-gradient(135deg, var(--sap-blue-dark), var(--sap-blue));
     color: var(--sap-white);
     border-radius: 20px;
     font-weight: 900;
-    font-size: clamp(11px, 1.2vw, 15px);
-    letter-spacing: 1px;
+    font-size: clamp(10px, 1.1vw, 13px);
+    letter-spacing: 2px;
     text-transform: uppercase;
+    box-shadow: 0 2px 14px rgba(27,144,255,0.4);
+  }
+  .header-rule {
+    max-width: 640px;
+    margin: 12px auto 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--amber), var(--sap-blue), var(--amber), transparent);
+    opacity: 0.5;
   }
 
-  /* ── Sync Status Bar ────────────────────────────────────────────── */
+  /* ── Sync Status ─────────────────────────────────────────────────── */
   .sync-status {
     text-align: center;
-    padding: 4px;
+    padding: 5px;
     font-size: 11px;
     color: var(--text-dim);
     position: relative;
@@ -105,411 +182,438 @@
   }
   .dot {
     display: inline-block;
-    width: 8px; height: 8px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     margin-right: 4px;
     vertical-align: middle;
   }
-  .dot.ok { background: var(--green-up); }
-  .dot.warn { background: #FFA000; }
-  .dot.err { background: var(--red-down); }
+  .dot.ok  { background: var(--green-up); box-shadow: 0 0 6px var(--green-up); }
+  .dot.warn{ background: var(--amber);    box-shadow: 0 0 6px var(--amber); }
+  .dot.err { background: var(--red-down); box-shadow: 0 0 6px var(--red-down); }
 
-  /* ── Navigation Tabs ───────────────────────────────────────────── */
+  /* ── Nav Tabs ────────────────────────────────────────────────────── */
   .nav-tabs {
     display: flex;
     justify-content: center;
     gap: 8px;
-    padding: 8px 20px;
+    padding: 10px 20px;
     position: relative;
     z-index: 1;
     flex-wrap: wrap;
   }
   .nav-tab {
-    padding: 8px 24px;
-    border: 2px solid var(--sap-blue);
-    background: transparent;
-    color: var(--sap-light-blue);
+    padding: 9px 26px;
+    border: 1px solid var(--border-blue);
+    background: var(--bg-panel);
+    color: var(--text-secondary);
     font-family: 'Inter', sans-serif;
     font-weight: 700;
-    font-size: 14px;
-    border-radius: 8px;
+    font-size: 13px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s;
-    letter-spacing: 0.5px;
+    transition: all 0.25s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
   }
-  .nav-tab:hover { background: rgba(27,144,255,0.15); }
+  .nav-tab:hover {
+    border-color: var(--sap-blue);
+    color: var(--sap-light-blue);
+    background: rgba(27,144,255,0.1);
+    transform: translateY(-1px);
+  }
   .nav-tab.active {
-    background: var(--sap-blue);
-    color: var(--sap-white);
+    background: linear-gradient(135deg, var(--sap-blue-dark), var(--sap-blue));
+    color: white;
+    border-color: var(--sap-blue);
+    box-shadow: 0 4px 16px rgba(27,144,255,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
   }
 
-  /* ── Panels ────────────────────────────────────────────────────── */
-  .panel { display: none; position: relative; z-index: 1; padding: 0 20px 40px; }
+  /* ── Panels ──────────────────────────────────────────────────────── */
+  .panel { display: none; position: relative; z-index: 1; padding: 0 20px 60px; }
   .panel.active { display: block; }
 
-  /* ── Admin Sections ─────────────────────────────────────────────── */
+  /* ── Admin Sections ──────────────────────────────────────────────── */
   .admin-section {
-    max-width: 900px;
+    max-width: 920px;
     margin: 0 auto 20px;
-    background: rgba(0,20,74,0.8);
-    border: 1px solid rgba(27,144,255,0.3);
-    border-radius: 12px;
-    padding: 20px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-blue);
+    border-radius: 16px;
+    padding: 24px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
   }
   .admin-section h2 {
     font-family: 'UnifrakturCook', cursive;
-    font-size: 22px;
+    font-size: 24px;
     color: var(--sap-light-blue);
-    margin-bottom: 14px;
-    border-bottom: 1px solid rgba(27,144,255,0.3);
-    padding-bottom: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-blue);
+    text-shadow: 0 0 20px rgba(27,144,255,0.3);
   }
 
-  /* ── Setup Bar / Config ─────────────────────────────────────────── */
-  .setup-bar { border-color: rgba(27,144,255,0.4); }
+  /* ── Setup Bar ───────────────────────────────────────────────────── */
+  .setup-bar { border-color: rgba(27,144,255,0.3); }
   .setup-bar summary {
     cursor: pointer;
     font-weight: 700;
-    color: var(--sap-blue-dark);
+    color: var(--text-secondary);
     font-size: 13px;
     letter-spacing: 0.5px;
   }
 
-  /* ── Registered Teams Table (admin) ─────────────────────────────── */
-  .reg-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 8px;
-  }
+  /* ── Registered Teams Table ──────────────────────────────────────── */
+  .reg-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
   .reg-table th {
     text-align: left;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--sap-blue);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 6px 8px;
-    border-bottom: 2px solid var(--sap-blue);
+    letter-spacing: 2px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-blue);
   }
   .reg-table td {
-    padding: 6px 8px;
+    padding: 8px 10px;
     font-size: 13px;
-    border-bottom: 1px solid rgba(27,144,255,0.15);
-    vertical-align: top;
+    border-bottom: 1px solid rgba(27,144,255,0.07);
+    vertical-align: middle;
   }
-  .reg-table .members {
-    font-size: 12px;
-    color: var(--text-dim);
-  }
+  .reg-table tr:hover td { background: rgba(27,144,255,0.05); }
+  .reg-table .members { font-size: 12px; color: var(--text-dim); }
   .reg-table .remove-btn {
     background: none;
-    border: 1px solid var(--red-down);
+    border: 1px solid rgba(239,68,68,0.5);
     color: var(--red-down);
     font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-  }
-  .reg-table .remove-btn:hover {
-    background: var(--red-down);
-    color: white;
-  }
-  .reg-count {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 10px;
-  }
-
-  /* ── Score Entry ────────────────────────────────────────────────── */
-  .round-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  .round-tab {
-    padding: 6px 16px;
-    border: 1px solid rgba(27,144,255,0.4);
-    background: transparent;
-    color: var(--text-secondary);
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
+    padding: 3px 10px;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    transition: all 0.2s;
   }
-  .round-tab:hover { background: rgba(27,144,255,0.15); }
+  .reg-table .remove-btn:hover { background: var(--red-down); color: white; border-color: var(--red-down); }
+  .reg-count { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+
+  /* ── Score Entry ─────────────────────────────────────────────────── */
+  .round-tabs { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+  .round-tab {
+    padding: 7px 18px;
+    border: 1px solid var(--border-blue);
+    background: rgba(0,18,56,0.4);
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .round-tab:hover { border-color: var(--sap-blue); color: var(--sap-light-blue); }
   .round-tab.active {
     background: var(--sap-blue);
-    color: var(--sap-white);
-    border-color: var(--sap-blue);
-  }
-  .round-tab.has-scores {
-    border-color: var(--green-up);
-    color: var(--green-up);
-  }
-  .round-tab.has-scores.active {
-    background: var(--green-up);
     color: white;
+    border-color: var(--sap-blue);
+    box-shadow: 0 0 12px rgba(27,144,255,0.4);
   }
-  .score-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 8px;
-  }
+  .round-tab.has-scores { border-color: var(--green-up); color: var(--green-up); }
+  .round-tab.has-scores.active { background: var(--green-up); color: white; box-shadow: 0 0 12px rgba(34,197,94,0.4); }
+
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
   .score-input-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    padding: 9px 12px;
+    background: rgba(0,18,56,0.35);
+    border: 1px solid rgba(27,144,255,0.1);
+    border-radius: 8px;
+    transition: border-color 0.2s;
   }
-  .score-input-row .team-label {
-    flex: 1;
-    font-size: 13px;
-    color: var(--text-primary);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
+  .score-input-row:hover { border-color: rgba(27,144,255,0.3); }
+  .score-input-row .team-label { flex: 1; font-size: 13px; color: var(--text-primary); word-wrap: break-word; overflow-wrap: break-word; }
   .score-input-row input[type="number"] {
     width: 64px;
-    padding: 6px 8px;
-    background: rgba(0,10,40,0.4);
-    border: 1px solid rgba(27,144,255,0.4);
-    border-radius: 6px;
+    padding: 7px 8px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-blue);
+    border-radius: 8px;
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     text-align: center;
     outline: none;
-    transition: border-color 0.3s;
+    transition: all 0.25s;
   }
-  .score-input-row input[type="number"]:focus { border-color: var(--sap-light-blue); }
+  .score-input-row input[type="number"]:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 14px var(--amber-glow);
+  }
 
-  /* ── Auto-save indicator ────────────────────────────────────────── */
-  .autosave-indicator {
-    font-size: 12px;
-    color: var(--text-dim);
-    transition: opacity 0.3s;
-    min-height: 18px;
-  }
+  /* ── Autosave ────────────────────────────────────────────────────── */
+  .autosave-indicator { font-size: 12px; color: var(--text-dim); transition: all 0.3s; min-height: 18px; }
   .autosave-indicator.saving { color: var(--sap-light-blue); }
   .autosave-indicator.saved { color: var(--green-up); }
 
-  /* ── Buttons ───────────────────────────────────────────────────── */
+  /* ── Buttons ─────────────────────────────────────────────────────── */
   .btn {
     padding: 10px 28px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.25s;
     letter-spacing: 0.5px;
   }
   .btn-primary {
-    background: var(--sap-blue);
-    color: var(--sap-white);
-  }
-  .btn-primary:hover { background: var(--sap-light-blue); transform: translateY(-1px); }
-  .btn-danger {
-    background: var(--red-down);
+    background: linear-gradient(135deg, var(--sap-blue-dark), var(--sap-blue));
     color: white;
+    box-shadow: 0 4px 14px rgba(27,144,255,0.35);
   }
-  .btn-danger:hover { opacity: 0.9; }
-  .btn-row {
-    display: flex;
-    gap: 12px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-    align-items: center;
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(27,144,255,0.5); }
+  .btn-danger {
+    background: linear-gradient(135deg, #991B1B, var(--red-down));
+    color: white;
+    box-shadow: 0 4px 14px rgba(239,68,68,0.3);
   }
+  .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(239,68,68,0.45); }
   .btn-secondary {
     background: transparent;
-    border: 2px solid var(--sap-blue);
+    border: 1px solid var(--border-blue);
     color: var(--sap-light-blue);
   }
-  .btn-secondary:hover {
-    background: rgba(27,144,255,0.15);
-  }
+  .btn-secondary:hover { background: rgba(27,144,255,0.1); border-color: var(--sap-blue); }
+  .btn-row { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; align-items: center; }
 
-  /* ── Lock Toggle ────────────────────────────────────────────────── */
+  /* ── Lock Toggle ─────────────────────────────────────────────────── */
   .lock-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     padding: 10px 14px;
-    background: rgba(0,42,134,0.3);
-    border-radius: 8px;
-    border: 1px solid rgba(27,144,255,0.2);
+    background: rgba(0,18,56,0.4);
+    border-radius: 10px;
+    border: 1px solid var(--border-blue);
   }
-  .lock-row label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    cursor: pointer;
-    user-select: none;
-  }
+  .lock-row label { font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; user-select: none; }
   .toggle {
     position: relative;
-    width: 44px;
-    height: 24px;
+    width: 44px; height: 24px;
     background: rgba(27,144,255,0.2);
     border-radius: 12px;
     cursor: pointer;
     transition: background 0.3s;
     flex-shrink: 0;
+    border: 1px solid var(--border-blue);
   }
-  .toggle.on { background: var(--green-up); }
+  .toggle.on { background: var(--green-up); border-color: var(--green-up); }
   .toggle::after {
     content: '';
     position: absolute;
     top: 3px; left: 3px;
-    width: 18px; height: 18px;
+    width: 16px; height: 16px;
     background: white;
     border-radius: 50%;
     transition: transform 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
   }
   .toggle.on::after { transform: translateX(20px); }
 
-  /* ── LEADERBOARD ───────────────────────────────────────────────── */
-  .leaderboard-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 8px;
-  }
-  .leaderboard-grid {
-    display: flex;
-    flex-direction: column;
-  }
-  .leaderboard-grid.two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 20px;
-  }
+  /* ════════════════════════════════════════════════════════════════
+     LEADERBOARD
+     ════════════════════════════════════════════════════════════════ */
+  .leaderboard-container { max-width: 1060px; margin: 0 auto; padding: 0 8px; }
+  .leaderboard-grid { display: flex; flex-direction: column; }
+  .leaderboard-grid.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+
   .lb-header {
     display: grid;
-    grid-template-columns: 50px 1fr 56px 56px 56px 56px 64px 90px;
-    padding: 10px 16px;
-    font-size: 15px;
+    grid-template-columns: 52px 1fr 56px 56px 56px 56px 64px 90px;
+    padding: 8px 16px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--sap-blue);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 2px solid var(--sap-blue);
-    margin-bottom: 6px;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--border-blue);
+    margin-bottom: 8px;
+    opacity: 0.8;
   }
   .lb-header span:nth-child(n+3) { text-align: center; }
   .lb-header span:last-child { text-align: right; }
+
   .lb-row {
     display: grid;
-    grid-template-columns: 50px 1fr 56px 56px 56px 56px 64px 90px;
+    grid-template-columns: 52px 1fr 56px 56px 56px 56px 64px 90px;
     align-items: center;
     padding: 14px 16px;
-    border-radius: 10px;
-    font-size: 18px;
+    border-radius: 12px;
+    font-size: 16px;
     font-weight: 600;
     position: relative;
-    background: rgba(0,20,74,0.6);
-    border: 1px solid rgba(27,144,255,0.15);
-    margin-bottom: 5px;
+    background: var(--bg-row);
+    border: 1px solid var(--border-blue);
+    margin-bottom: 6px;
     transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
   }
-  .lb-row .rank {
-    font-weight: 900;
-    font-size: 24px;
-    color: var(--sap-light-blue);
+  /* Left accent bar */
+  .lb-row::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--sap-blue);
+    border-radius: 12px 0 0 12px;
+    opacity: 0.5;
   }
-  .lb-row .team-name {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    padding-right: 8px;
-    line-height: 1.2;
-    font-size: 22px;
-  }
-  .lb-row .round-score {
-    text-align: center;
-    color: var(--text-secondary);
-    font-size: 18px;
-  }
-  .lb-row .round-score.mega { color: var(--sap-light-blue); font-weight: 700; }
-  .lb-row .total {
-    text-align: right;
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--text-primary);
-  }
-  .lb-row .movement {
-    font-size: 12px;
-    font-weight: 900;
-    margin-left: 4px;
-    display: inline;
-  }
+  .lb-row .rank { font-weight: 900; font-size: 22px; color: var(--sap-light-blue); text-align: center; }
+  .lb-row .team-name { word-wrap: break-word; overflow-wrap: break-word; padding-right: 8px; line-height: 1.2; font-size: 20px; font-weight: 700; }
+  .lb-row .round-score { text-align: center; color: var(--text-secondary); font-size: 15px; }
+  .lb-row .round-score.mega { color: var(--amber-light); font-weight: 700; }
+  .lb-row .total { text-align: right; font-size: 24px; font-weight: 900; color: var(--text-primary); }
+  .lb-row .movement { font-size: 11px; font-weight: 900; margin-left: 3px; display: inline; }
   .lb-row .movement.up { color: var(--green-up); }
   .lb-row .movement.down { color: var(--red-down); }
 
-  /* ── Podium ────────────────────────────────────────────────────── */
+  /* Rank 1 — Gold */
   .lb-row.rank-1 {
-    background: linear-gradient(135deg, rgba(27,144,255,0.25) 0%, rgba(0,112,242,0.12) 100%);
-    border-color: var(--sap-blue);
-    box-shadow: 0 0 20px rgba(27,144,255,0.25);
+    background: linear-gradient(135deg, rgba(255,215,0,0.09) 0%, rgba(0,112,242,0.14) 55%, rgba(0,18,56,0.5) 100%);
+    border-color: rgba(255,215,0,0.55);
+    box-shadow: 0 0 28px rgba(255,215,0,0.13), 0 4px 20px rgba(0,0,0,0.35);
   }
-  .lb-row.rank-1 .rank { color: var(--gold); font-size: 28px; }
-  .lb-row.rank-1 .total { color: var(--sap-light-blue); font-size: 28px; }
-  .lb-row.rank-1 .team-name { color: var(--sap-light-blue); font-weight: 900; font-size: 24px; }
-  .lb-row.rank-2 {
-    background: linear-gradient(135deg, rgba(137,209,255,0.1) 0%, rgba(0,112,242,0.05) 100%);
-    border-color: var(--sap-light-blue);
-  }
-  .lb-row.rank-2 .rank { color: var(--silver); }
-  .lb-row.rank-3 {
-    background: linear-gradient(135deg, rgba(0,42,134,0.2) 0%, rgba(0,20,74,0.1) 100%);
-    border-color: var(--sap-navy);
-  }
-  .lb-row.rank-3 .rank { color: var(--bronze); }
+  .lb-row.rank-1::before { background: var(--gold); opacity: 1; width: 4px; }
+  .lb-row.rank-1 .rank  { color: var(--gold); font-size: 30px; }
+  .lb-row.rank-1 .total { color: var(--gold); font-size: 30px; }
+  .lb-row.rank-1 .team-name { color: white; font-weight: 900; font-size: 22px; }
 
-  /* ── Shuffle Animations ─────────────────────────────────────────── */
-  .lb-row.shuffle-move {
-    transition: transform 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                background 0.5s, border-color 0.5s, box-shadow 0.5s;
+  /* Rank 2 — Silver */
+  .lb-row.rank-2 {
+    background: linear-gradient(135deg, rgba(200,214,229,0.07) 0%, rgba(0,112,242,0.09) 100%);
+    border-color: rgba(200,214,229,0.4);
   }
-  .lb-row.shuffle-up {
-    animation: glowGreen 1.8s ease;
+  .lb-row.rank-2::before { background: var(--silver); opacity: 0.85; }
+  .lb-row.rank-2 .rank  { color: var(--silver); }
+  .lb-row.rank-2 .total { color: var(--silver); }
+
+  /* Rank 3 — Bronze */
+  .lb-row.rank-3 {
+    background: linear-gradient(135deg, rgba(205,127,50,0.07) 0%, rgba(0,42,134,0.14) 100%);
+    border-color: rgba(205,127,50,0.35);
   }
-  .lb-row.shuffle-down {
-    animation: glowRed 1.8s ease;
-  }
+  .lb-row.rank-3::before { background: var(--bronze); opacity: 0.85; }
+  .lb-row.rank-3 .rank  { color: var(--bronze); }
+  .lb-row.rank-3 .total { color: var(--bronze); }
+
+  /* Shuffle animations */
+  .lb-row.shuffle-move { transition: transform 1.8s cubic-bezier(0.25,0.46,0.45,0.94), background 0.5s, border-color 0.5s, box-shadow 0.5s; }
+  .lb-row.shuffle-up   { animation: glowGreen 2s ease; }
+  .lb-row.shuffle-down { animation: glowRed 2s ease; }
   @keyframes glowGreen {
-    0% { box-shadow: 0 0 0 rgba(76,175,80,0); }
-    30% { box-shadow: 0 0 20px rgba(76,175,80,0.4); }
-    100% { box-shadow: none; }
+    0%  { box-shadow: 0 0 0 rgba(34,197,94,0); }
+    30% { box-shadow: 0 0 24px rgba(34,197,94,0.45), 0 0 48px rgba(34,197,94,0.15); }
+    100%{ box-shadow: none; }
   }
   @keyframes glowRed {
-    0% { box-shadow: 0 0 0 rgba(229,57,53,0); }
-    30% { box-shadow: 0 0 20px rgba(229,57,53,0.4); }
+    0%  { box-shadow: 0 0 0 rgba(239,68,68,0); }
+    30% { box-shadow: 0 0 24px rgba(239,68,68,0.45), 0 0 48px rgba(239,68,68,0.15); }
+    100%{ box-shadow: none; }
+  }
+
+  /* Score count-up */
+  .lb-row .total.counting { color: var(--sap-light-blue); text-shadow: 0 0 16px rgba(137,209,255,0.6); }
+  .lb-row.flash { animation: scoreFlash 0.8s ease; }
+  @keyframes scoreFlash {
+    0%   { background: rgba(27,144,255,0.22); }
+    100% { }
+  }
+
+  /* ── FLIP shuffle trails ─────────────────────────────────────────── */
+  .lb-row.climbing {
+    animation: climbTrail 1.2s ease forwards;
+  }
+  .lb-row.falling {
+    animation: fallTrail 1.2s ease forwards;
+  }
+  @keyframes climbTrail {
+    0%   { box-shadow: none; }
+    25%  { box-shadow: 0 -10px 40px rgba(34,197,94,0.6), 0 0 80px rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.7); }
+    100% { box-shadow: none; }
+  }
+  @keyframes fallTrail {
+    0%   { box-shadow: none; }
+    25%  { box-shadow: 0 10px 40px rgba(239,68,68,0.6), 0 0 80px rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.7); }
     100% { box-shadow: none; }
   }
 
-  /* ── Score Count-up ─────────────────────────────────────────────── */
-  .lb-row .total.counting {
-    color: var(--sap-light-blue);
-    text-shadow: 0 0 12px rgba(137,209,255,0.6);
+  /* ── Podium medal badges ─────────────────────────────────────────── */
+  .medal-badge {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 18px;
+    vertical-align: middle;
+    opacity: 0;
+    animation: medalPop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards;
   }
-  .lb-row.flash { animation: scoreFlash 0.6s ease; }
-  @keyframes scoreFlash {
-    0% { background: rgba(27,144,255,0.3); }
-    100% { background: rgba(0,20,74,0.6); }
+  @keyframes medalPop {
+    0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+    70%  { transform: scale(1.2) rotate(5deg);  opacity: 1; }
+    100% { transform: scale(1)   rotate(0);     opacity: 1; }
+  }
+  .crown-badge {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 22px;
+    vertical-align: middle;
+    opacity: 0;
+    animation: crownDrop 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes crownDrop {
+    0%   { transform: translateY(-28px) scale(1.5); opacity: 0; }
+    60%  { transform: translateY(5px)   scale(0.92); opacity: 1; }
+    100% { transform: translateY(0)     scale(1);    opacity: 1; }
   }
 
-  /* ── Suspense Overlay ──────────────────────────────────────────── */
+  /* ── Champion shimmer (rank 1 post-reveal) ───────────────────────── */
+  .lb-row.rank-1.champion {
+    animation: championShimmer 2.8s ease-in-out infinite;
+  }
+  @keyframes championShimmer {
+    0%,100% {
+      box-shadow: 0 0 20px rgba(255,215,0,0.18), 0 4px 20px rgba(0,0,0,0.35);
+      border-color: rgba(255,215,0,0.55);
+    }
+    50% {
+      box-shadow: 0 0 60px rgba(255,215,0,0.55), 0 0 120px rgba(255,215,0,0.18), 0 4px 20px rgba(0,0,0,0.35);
+      border-color: rgba(255,215,0,0.95);
+    }
+  }
+
+  /* ── Podium scale pulse on reveal ────────────────────────────────── */
+  .lb-row.podium-pop {
+    animation: podiumPop 0.45s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes podiumPop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.045); }
+    100% { transform: scale(1); }
+  }
+
+  /* ── Suspense Overlay ────────────────────────────────────────────── */
   .suspense-overlay {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.92);
+    inset: 0;
+    background: rgba(1,8,18,0.96);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -518,256 +622,244 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s;
+    backdrop-filter: blur(10px);
   }
   .suspense-overlay.show { opacity: 1; pointer-events: all; }
+  .suspense-overlay::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(27,144,255,0.09) 0%, transparent 70%);
+    animation: suspenseBreath 2.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes suspenseBreath {
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; }
+    50%      { transform: translate(-50%,-50%) scale(1.35); opacity: 1; }
+  }
   .suspense-overlay h2 {
     font-family: 'UnifrakturCook', cursive;
     font-size: clamp(36px, 6vw, 72px);
-    color: var(--sap-light-blue);
-    text-shadow: 0 0 40px rgba(27,144,255,0.5);
-    animation: suspensePulse 1.5s ease-in-out infinite;
+    color: white;
+    text-shadow: 0 0 60px rgba(27,144,255,0.6);
+    animation: suspensePulse 1.6s ease-in-out infinite;
     text-align: center;
-    padding: 0 20px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
   }
   .suspense-overlay .suspense-sub {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(14px, 2vw, 22px);
-    color: var(--text-dim);
+    font-size: clamp(12px, 1.8vw, 18px);
+    color: var(--text-amber);
     margin-top: 16px;
-    letter-spacing: 2px;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    animation: suspensePulse 1.5s ease-in-out infinite;
+    animation: suspensePulse 1.6s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
   }
   @keyframes suspensePulse {
-    0%, 100% { opacity: 0.7; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
+    0%,100% { opacity: 0.55; }
+    50%      { opacity: 1; }
   }
 
-  /* ── Reveal Landing Screen ─────────────────────────────────────── */
+  /* ── Reveal Landing ──────────────────────────────────────────────── */
   .reveal-landing {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 60vh;
+    min-height: 65vh;
     text-align: center;
     padding: 40px 20px;
   }
+  .reveal-landing .stein-emoji {
+    font-size: clamp(52px, 9vw, 100px);
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 16px rgba(245,158,11,0.35));
+    animation: steinFloat 3.5s ease-in-out infinite;
+  }
+  @keyframes steinFloat {
+    0%,100% { transform: translateY(0) rotate(-3deg); filter: drop-shadow(0 0 12px rgba(245,158,11,0.3)); }
+    50%      { transform: translateY(-8px) rotate(3deg); filter: drop-shadow(0 0 28px rgba(245,158,11,0.55)); }
+  }
   .reveal-landing h2 {
     font-family: 'UnifrakturCook', cursive;
-    font-size: clamp(28px, 4vw, 52px);
-    color: var(--sap-light-blue);
-    text-shadow: 0 2px 12px rgba(0,0,0,0.5), 0 0 40px rgba(27,144,255,0.3);
-    margin-bottom: 12px;
+    font-size: clamp(28px, 4.5vw, 58px);
+    color: white;
+    text-shadow: 0 0 40px rgba(27,144,255,0.35);
+    margin-bottom: 8px;
   }
   .reveal-landing .round-label {
-    font-size: clamp(14px, 2vw, 20px);
-    color: var(--text-secondary);
-    font-weight: 600;
-    letter-spacing: 2px;
+    font-size: clamp(12px, 1.7vw, 17px);
+    color: var(--text-amber);
+    font-weight: 700;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    margin-bottom: 40px;
+    margin-bottom: 48px;
   }
   .reveal-btn {
-    padding: 20px 60px;
-    background: linear-gradient(135deg, var(--sap-blue) 0%, var(--sap-light-blue) 100%);
-    color: var(--sap-white);
+    padding: 22px 72px;
+    background: linear-gradient(135deg, var(--amber-dark) 0%, var(--amber) 50%, var(--amber-light) 100%);
+    color: #1A0800;
     border: none;
-    border-radius: 16px;
+    border-radius: 20px;
     font-family: 'Inter', sans-serif;
     font-size: clamp(18px, 2.5vw, 28px);
     font-weight: 900;
     cursor: pointer;
     letter-spacing: 3px;
     text-transform: uppercase;
-    box-shadow: 0 4px 30px rgba(27,144,255,0.4);
-    animation: revealBtnPulse 2s ease-in-out infinite;
+    box-shadow: 0 8px 40px rgba(245,158,11,0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+    animation: revealBtnPulse 2.5s ease-in-out infinite;
     transition: transform 0.3s, box-shadow 0.3s;
   }
-  .reveal-btn:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 8px 40px rgba(27,144,255,0.6);
-  }
+  .reveal-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 14px 54px rgba(245,158,11,0.65); }
   @keyframes revealBtnPulse {
-    0%, 100% { box-shadow: 0 4px 30px rgba(27,144,255,0.4); }
-    50% { box-shadow: 0 4px 50px rgba(27,144,255,0.7), 0 0 80px rgba(27,144,255,0.2); }
+    0%,100% { box-shadow: 0 8px 40px rgba(245,158,11,0.4), inset 0 2px 0 rgba(255,255,255,0.2); }
+    50%      { box-shadow: 0 8px 64px rgba(245,158,11,0.7), 0 0 100px rgba(245,158,11,0.15), inset 0 2px 0 rgba(255,255,255,0.2); }
   }
-  .reveal-landing .team-count-info {
-    margin-top: 30px;
-    font-size: 14px;
-    color: var(--text-dim);
-  }
+  .reveal-landing .team-count-info { margin-top: 28px; font-size: 14px; color: var(--text-dim); letter-spacing: 1px; }
 
-  /* ── Confetti Canvas ───────────────────────────────────────────── */
-  #confetti-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 200;
-  }
+  /* ── Confetti ────────────────────────────────────────────────────── */
+  #confetti-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
 
-  /* ── Winner Banner ─────────────────────────────────────────────── */
+  /* ── Winner Banner ───────────────────────────────────────────────── */
   .winner-banner {
     display: none;
     text-align: center;
-    padding: 24px;
-    margin-bottom: 16px;
+    padding: 32px 24px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.08) 0%, rgba(0,112,242,0.1) 100%);
+    border: 1px solid rgba(255,215,0,0.45);
+    border-radius: 20px;
+    box-shadow: 0 0 60px rgba(255,215,0,0.12);
   }
-  .winner-banner.show { display: block; animation: winnerDrop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  .winner-banner.show { display: block; animation: winnerDrop 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
   @keyframes winnerDrop {
-    0% { opacity: 0; transform: translateY(-40px) scale(0.9); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+    0%  { opacity: 0; transform: translateY(-40px) scale(0.9); }
+    100%{ opacity: 1; transform: translateY(0) scale(1); }
   }
   .winner-banner h2 {
     font-family: 'UnifrakturCook', cursive;
     font-size: clamp(28px, 4.5vw, 56px);
-    color: var(--sap-light-blue);
-    text-shadow: 0 0 40px rgba(27,144,255,0.5);
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(255,215,0,0.4);
   }
-  .winner-banner .crown { font-size: clamp(36px, 5.5vw, 72px); }
-  .winner-banner .winner-name {
-    font-size: clamp(22px, 3.5vw, 46px);
-    font-weight: 900;
-    color: var(--sap-white);
-    margin-top: 8px;
-    text-shadow: 0 0 20px rgba(255,255,255,0.3);
-  }
+  .winner-banner .crown { font-size: clamp(40px, 6vw, 80px); }
+  .winner-banner .winner-name { font-size: clamp(22px, 3.5vw, 46px); font-weight: 900; color: white; margin-top: 8px; }
 
-  /* ══════════════════════════════════════════════════════════════════
-     REGISTRATION VIEW
-     ══════════════════════════════════════════════════════════════════ */
-  .reg-container {
-    max-width: 560px;
-    margin: 0 auto;
-    padding: 0 20px 40px;
-  }
+  /* ════════════════════════════════════════════════════════════════
+     REGISTRATION
+     ════════════════════════════════════════════════════════════════ */
+  .reg-container { max-width: 560px; margin: 0 auto; padding: 0 20px 40px; }
   .reg-card {
-    background: rgba(0,20,74,0.85);
-    border: 1px solid rgba(27,144,255,0.3);
-    border-radius: 16px;
-    padding: 32px 28px;
-    margin-top: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-blue);
+    border-radius: 20px;
+    padding: 36px 30px;
+    margin-top: 12px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Amber top accent stripe */
+  .reg-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--amber), var(--sap-blue), var(--amber), transparent);
+    opacity: 0.75;
   }
   .reg-card h2 {
     font-family: 'UnifrakturCook', cursive;
-    font-size: 28px;
-    color: var(--sap-light-blue);
+    font-size: 30px;
+    color: white;
     margin-bottom: 4px;
+    text-shadow: 0 0 20px rgba(27,144,255,0.3);
   }
-  .reg-card .reg-subtitle {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-bottom: 20px;
-  }
-  .reg-field {
-    margin-bottom: 16px;
-  }
+  .reg-card .reg-subtitle { font-size: 13px; color: var(--text-dim); margin-bottom: 24px; }
+  .reg-field { margin-bottom: 18px; }
   .reg-field label {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    color: var(--sap-blue);
+    color: var(--text-amber);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
+    letter-spacing: 2px;
+    margin-bottom: 7px;
   }
   .reg-field input {
     width: 100%;
-    padding: 10px 14px;
-    background: rgba(0,10,40,0.5);
-    border: 1px solid rgba(27,144,255,0.4);
-    border-radius: 8px;
+    padding: 12px 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-blue);
+    border-radius: 10px;
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
     font-size: 15px;
     outline: none;
-    transition: border-color 0.3s;
+    transition: all 0.25s;
   }
-  .reg-field input:focus { border-color: var(--sap-light-blue); }
+  .reg-field input:focus { border-color: var(--amber); box-shadow: 0 0 16px var(--amber-glow); }
   .reg-field input::placeholder { color: var(--text-dim); }
-  .reg-members-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+  .reg-members-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .reg-btn {
     width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, var(--sap-blue) 0%, var(--sap-light-blue) 100%);
-    color: var(--sap-white);
+    padding: 15px;
+    background: linear-gradient(135deg, var(--amber-dark) 0%, var(--amber) 100%);
+    color: #1A0800;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     font-family: 'Inter', sans-serif;
     font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: all 0.3s;
-    margin-top: 8px;
-  }
-  .reg-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(27,144,255,0.4); }
-  .reg-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-  .reg-success {
-    text-align: center;
-    padding: 40px 20px;
-  }
-  .reg-success .checkmark {
-    font-size: 64px;
-    margin-bottom: 16px;
-  }
-  .reg-success h2 {
-    margin-bottom: 8px;
-  }
-  .reg-success .team-display {
-    font-size: 22px;
     font-weight: 900;
-    color: var(--sap-white);
-    margin: 12px 0;
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.25s;
+    margin-top: 10px;
+    box-shadow: 0 4px 20px rgba(245,158,11,0.35);
   }
-  .reg-success .member-list {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.8;
-  }
-  .reg-closed-msg {
-    text-align: center;
-    padding: 40px 20px;
-  }
+  .reg-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,158,11,0.5); }
+  .reg-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .reg-success { text-align: center; padding: 40px 20px; }
+  .reg-success .checkmark { font-size: 64px; margin-bottom: 16px; }
+  .reg-success h2 { margin-bottom: 8px; }
+  .reg-success .team-display { font-size: 22px; font-weight: 900; color: var(--text-amber); margin: 12px 0; }
+  .reg-success .member-list { font-size: 14px; color: var(--text-secondary); line-height: 1.8; }
+  .reg-closed-msg { text-align: center; padding: 40px 20px; }
   .reg-closed-msg h2 { margin-bottom: 12px; }
-  .reg-closed-msg p {
-    color: var(--text-secondary);
-    font-size: 15px;
-  }
+  .reg-closed-msg p { color: var(--text-secondary); font-size: 15px; }
   .reg-team-count {
     text-align: center;
     margin-top: 16px;
     padding: 10px;
-    background: rgba(0,42,134,0.3);
+    background: rgba(0,18,56,0.4);
     border-radius: 8px;
+    border: 1px solid var(--border-blue);
     font-size: 13px;
     color: var(--text-secondary);
   }
-  .reg-team-count strong { color: var(--sap-light-blue); font-size: 20px; }
+  .reg-team-count strong { color: var(--amber-light); font-size: 20px; }
 
-  /* ── Responsive ────────────────────────────────────────────────── */
+  /* ── Responsive ──────────────────────────────────────────────────── */
   @media (max-width: 900px) {
     .leaderboard-grid.two-col { grid-template-columns: 1fr; }
     .lb-header, .lb-row {
-      grid-template-columns: 28px 1fr 36px 36px 36px 36px 44px 56px;
+      grid-template-columns: 28px 1fr 34px 34px 34px 34px 44px 54px;
       font-size: 11px;
-      padding: 5px 6px;
+      padding: 6px 8px;
     }
-    .lb-row .rank { font-size: 14px; }
+    .lb-row .rank  { font-size: 14px; }
     .lb-row .team-name { font-size: 12px; }
     .lb-row .total { font-size: 15px; }
-    .lb-row.rank-1 .rank { font-size: 18px; }
+    .lb-row.rank-1 .rank  { font-size: 18px; }
     .lb-row.rank-1 .total { font-size: 18px; }
     .lb-row.rank-1 .team-name { font-size: 14px; }
     .reg-members-grid { grid-template-columns: 1fr; }
@@ -777,9 +869,16 @@
 <body>
 
 <div class="header">
-  <h1>Oktoberfest Trivia 2026</h1>
-  <div class="subtitle">SAP Brisbane Office</div>
+  <div class="header-inner">
+    <h1>Oktoberfest Trivia 2026</h1>
+  </div>
+  <div class="event-meta">
+    <span class="subtitle">SAP Brisbane Office</span>
+    <span class="divider-dot"></span>
+    <span class="subtitle">Live Scores</span>
+  </div>
   <div class="round-indicator" id="roundIndicator">Pre-Quiz Setup</div>
+  <div class="header-rule"></div>
 </div>
 
 <div class="sync-status" id="syncStatus">
@@ -821,7 +920,6 @@
       <div class="reg-team-count" id="regTeamCount"></div>
     </div>
 
-    <!-- Success state (hidden by default) -->
     <div class="reg-card reg-success" id="regSuccessCard" style="display:none">
       <div class="checkmark">&#10003;</div>
       <h2>You're In!</h2>
@@ -830,7 +928,6 @@
       <p style="margin-top:20px; color:var(--text-dim); font-size:13px;">You can close this page. See you at the quiz!</p>
     </div>
 
-    <!-- Registration closed state (hidden by default) -->
     <div class="reg-card reg-closed-msg" id="regClosedCard" style="display:none">
       <div style="font-size:48px; margin-bottom:12px;">&#128274;</div>
       <h2>Registration Closed</h2>
@@ -844,29 +941,27 @@
 <!-- ════════════════════════════════════════════════════════════════ -->
 <div class="panel" id="panel-admin">
 
-  <!-- Firebase Config (collapsible) -->
   <div class="admin-section setup-bar">
     <details id="fbConfigDetails">
       <summary>Firebase Connection Settings</summary>
-      <div style="margin-top:12px; margin-bottom:0; font-size:12px; color:var(--text-dim); line-height:1.5;">
+      <div style="margin-top:12px; font-size:12px; color:var(--text-dim); line-height:1.6;">
         Firebase is configured in the HTML file. If the status above shows
         <span style="color:var(--green-up);">&#9679; Connected</span>, you are good to go.
-        All devices accessing this URL share the same live data automatically.
+        All devices sharing this URL sync automatically in real time.
       </div>
     </details>
   </div>
 
-  <!-- Registered Teams -->
   <div class="admin-section">
     <h2>Registered Teams</h2>
     <div class="lock-row">
       <div class="toggle" id="regLockToggle" onclick="toggleRegistrationLock()"></div>
       <label onclick="toggleRegistrationLock()">Registration open &mdash; teams can register via the registration link</label>
     </div>
-    <div class="reg-link-box" id="regLinkBox" style="margin-bottom:14px; padding:10px 14px; background:rgba(27,144,255,0.08); border:1px dashed rgba(27,144,255,0.4); border-radius:8px;">
-      <div style="font-size:12px; font-weight:700; color:var(--sap-blue); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Registration Link (share with teams)</div>
+    <div class="reg-link-box" id="regLinkBox" style="margin-bottom:14px; padding:10px 14px; background:rgba(27,144,255,0.06); border:1px dashed rgba(27,144,255,0.35); border-radius:10px;">
+      <div style="font-size:10px; font-weight:700; color:var(--sap-blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:6px;">Registration Link — share with teams</div>
       <div style="display:flex; gap:8px; align-items:center;">
-        <input type="text" id="regLinkInput" readonly style="flex:1; padding:8px 12px; background:rgba(0,10,40,0.5); border:1px solid rgba(27,144,255,0.4); border-radius:6px; color:var(--sap-light-blue); font-family:'Inter',sans-serif; font-size:13px; outline:none;" />
+        <input type="text" id="regLinkInput" readonly style="flex:1; padding:8px 12px; background:var(--input-bg); border:1px solid var(--border-blue); border-radius:8px; color:var(--sap-light-blue); font-family:'Inter',sans-serif; font-size:13px; outline:none;" />
         <button class="btn btn-primary" style="padding:8px 16px; font-size:12px;" onclick="copyRegLink()">Copy</button>
       </div>
     </div>
@@ -877,7 +972,6 @@
     </div>
   </div>
 
-  <!-- Score Entry -->
   <div class="admin-section">
     <h2>Score Entry</h2>
     <div class="round-tabs" id="roundTabs"></div>
@@ -888,8 +982,7 @@
     </div>
   </div>
 
-  <!-- Danger Zone -->
-  <div class="admin-section" style="border-color:rgba(229,57,53,0.3)">
+  <div class="admin-section" style="border-color:rgba(239,68,68,0.3)">
     <h2 style="color:var(--red-down)">Reset</h2>
     <div class="btn-row">
       <button class="btn btn-danger" onclick="resetScores()">Reset All Scores</button>
@@ -903,22 +996,21 @@
 <!-- ════════════════════════════════════════════════════════════════ -->
 <div class="panel" id="panel-leaderboard">
   <div class="leaderboard-container">
-    <!-- Reveal Landing (shown first) -->
+
     <div class="reveal-landing" id="revealLanding">
+      <div class="stein-emoji">&#127867;</div>
       <h2>Oktoberfest Trivia 2026</h2>
       <div class="round-label" id="revealRoundLabel">Round 1 Scores</div>
       <button class="reveal-btn" id="revealBtn" onclick="triggerReveal()">Reveal Scores</button>
       <div class="team-count-info" id="revealTeamCount"></div>
     </div>
 
-    <!-- Winner Banner (hidden until final) -->
     <div class="winner-banner" id="winnerBanner">
       <div class="crown">&#x1F451;</div>
       <h2>Champions!</h2>
       <div class="winner-name" id="winnerName"></div>
     </div>
 
-    <!-- Actual Leaderboard (hidden until reveal) -->
     <div id="leaderboardSection" style="display:none;">
       <div class="leaderboard-grid" id="leaderboardGrid"></div>
       <div style="text-align:center; margin-top:24px;">
@@ -934,11 +1026,10 @@
   <div class="suspense-sub" id="suspenseSub"></div>
 </div>
 
-<!-- Confetti canvas -->
 <canvas id="confetti-canvas"></canvas>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<!--  FIREBASE SDK (v9 compat — loaded from CDN, no build step)     -->
+<!--  FIREBASE SDK                                                   -->
 <!-- ════════════════════════════════════════════════════════════════ -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -966,7 +1057,7 @@ const ROUNDS = ['R1', 'R2', 'R3', 'R4', 'Mega'];
 const ROUND_LABELS = { R1: 'Round 1', R2: 'Round 2', R3: 'Round 3', R4: 'Round 4', Mega: 'Mega Q' };
 const DB_PATH = 'trivia2026';
 const TWO_COL_THRESHOLD = 15;
-const AUTOSAVE_DELAY = 3000; // ms
+const AUTOSAVE_DELAY = 3000;
 
 // ══════════════════════════════════════════════════════════════════
 //  FIREBASE SYNC LAYER
@@ -1131,15 +1222,12 @@ function activateView(view) {
   const validViews = ['register', 'admin', 'leaderboard'];
   let target = validViews.includes(view) ? view : 'admin';
 
-  // Lock non-admin users to their entry view
   if (ENTRY_MODE === 'register' && target !== 'register') target = 'register';
   if (ENTRY_MODE === 'leaderboard' && target !== 'leaderboard') target = 'leaderboard';
 
-  // Hide nav tabs for non-admin users
   const navTabs = document.getElementById('navTabs');
   navTabs.style.display = (ENTRY_MODE === 'admin') ? '' : 'none';
 
-  // Hide round indicator and sync status for register and leaderboard views
   const roundIndicator = document.getElementById('roundIndicator');
   const syncStatus = document.getElementById('syncStatus');
   const headerEl = document.querySelector('.header');
@@ -1148,7 +1236,6 @@ function activateView(view) {
     syncStatus.style.display = 'none';
   }
   if (ENTRY_MODE === 'leaderboard') {
-    // Hide entire header — the reveal landing has its own title
     headerEl.style.display = 'none';
     syncStatus.style.display = 'none';
   }
@@ -1159,7 +1246,6 @@ function activateView(view) {
   if (panel) panel.classList.add('active');
 
   if (target === 'register') {
-    // Ensure only one card is visible at a time
     const formCard = document.getElementById('regFormCard');
     const successCard = document.getElementById('regSuccessCard');
     const closedCard = document.getElementById('regClosedCard');
@@ -1169,7 +1255,6 @@ function activateView(view) {
       successCard.style.display = 'none';
       closedCard.style.display = 'block';
     } else {
-      // Only show form if success isn't already showing
       if (successCard.style.display !== 'block') {
         formCard.style.display = '';
       }
@@ -1178,7 +1263,7 @@ function activateView(view) {
     updateRegTeamCount();
   }
   if (target === 'leaderboard') {
-    updateRevealLanding();
+    showRevealLanding();
   }
   if (target === 'admin') {
     renderAdminTeams();
@@ -1244,7 +1329,6 @@ async function submitRegistration() {
 
   await saveState();
 
-  // Hide form, show success only
   document.getElementById('regFormCard').style.display = 'none';
   document.getElementById('regClosedCard').style.display = 'none';
   document.getElementById('regSuccessCard').style.display = 'block';
@@ -1297,10 +1381,10 @@ function renderAdminTeams() {
   const lockLabel = toggle.nextElementSibling;
   if (state.registrationOpen) {
     toggle.classList.remove('on');
-    lockLabel.textContent = 'Registration open \u2014 teams can register via the registration link';
+    lockLabel.textContent = 'Registration open — teams can register via the registration link';
   } else {
     toggle.classList.add('on');
-    lockLabel.textContent = 'Registration locked \u2014 no new teams can register';
+    lockLabel.textContent = 'Registration locked — no new teams can register';
   }
 }
 
@@ -1372,7 +1456,7 @@ function scheduleAutosave() {
       indicator.textContent = 'Auto-saving...';
       indicator.className = 'autosave-indicator saving';
     }
-    await saveScores(true); // silent = true
+    await saveScores(true);
     if (indicator) {
       indicator.textContent = 'Auto-saved';
       indicator.className = 'autosave-indicator saved';
@@ -1462,7 +1546,7 @@ function updateRoundIndicator() {
   const el = document.getElementById('roundIndicator');
   if (!el) return;
   if (!state.scores) state.scores = {};
-  if (!state.teams) state.teams = [];
+  if (!state.teams) state.teams = {};
   const completedRounds = ROUNDS.filter(r =>
     state.teams.some((_, i) => state.scores[i] && state.scores[i][r])
   );
@@ -1592,6 +1676,107 @@ function appendLeaderboardColumn(container, teams, rankOffset) {
 }
 
 // ══════════════════════════════════════════════════════════════════
+//  AUDIO FX  (Web Audio API — no external files)
+// ══════════════════════════════════════════════════════════════════
+
+const AudioFX = {
+  ctx: null,
+
+  _ctx() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+    return this.ctx;
+  },
+
+  _osc(freq, type, dur, vol = 0.28, delay = 0) {
+    const ctx = this._ctx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+    gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+    gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + delay + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + dur);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + dur + 0.05);
+  },
+
+  drumroll(ms = 1800) {
+    const ctx = this._ctx();
+    const steps = Math.floor(ms / 38);
+    for (let i = 0; i < steps; i++) {
+      const t = i * 0.038;
+      const intensity = 0.06 + (i / steps) * 0.28;
+      const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.032), ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = (Math.random() * 2 - 1) * intensity;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass'; filter.frequency.value = 180 + Math.random() * 80; filter.Q.value = 0.4;
+      const gain = ctx.createGain();
+      src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(intensity, ctx.currentTime + t);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.034);
+      src.start(ctx.currentTime + t); src.stop(ctx.currentTime + t + 0.04);
+    }
+  },
+
+  whooshUp() {
+    const ctx = this._ctx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass'; filter.frequency.value = 900; filter.Q.value = 0.6;
+    osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(100, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.45);
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
+    osc.start(); osc.stop(ctx.currentTime + 0.6);
+  },
+
+  whooshDown() {
+    const ctx = this._ctx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(700, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.45);
+    gain.gain.setValueAtTime(0.14, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+    osc.start(); osc.stop(ctx.currentTime + 0.55);
+  },
+
+  chime(freq = 880) {
+    // Bell-like: fundamental + two harmonics
+    [[freq, 0.38], [freq * 2, 0.16], [freq * 3.1, 0.08]].forEach(([f, v]) => {
+      this._osc(f, 'sine', 0.9, v);
+    });
+  },
+
+  silverFanfare() {
+    // Ascending two-tone phrase
+    [[440, 0], [550, 0.16], [660, 0.32]].forEach(([f, d]) => this._osc(f, 'triangle', 0.45, 0.3, d));
+  },
+
+  goldFanfare() {
+    // Triumphant C major chord + ascending run
+    const base = [
+      [523, 0, 0.28], [659, 0, 0.28], [784, 0, 0.28],
+      [523, 0.28, 0.28], [659, 0.28, 0.28], [784, 0.28, 0.28],
+      [523, 0.56, 0.7], [659, 0.56, 0.7], [784, 0.56, 0.7], [1047, 0.6, 0.9]
+    ];
+    base.forEach(([f, d, dur]) => this._osc(f, 'triangle', dur, 0.32, d));
+    // Subtle brass layer on the final chord
+    [[523, 0.56, 0.7], [784, 0.56, 0.7]].forEach(([f, d, dur]) => this._osc(f, 'sawtooth', dur, 0.07, d));
+  }
+};
+
+// ══════════════════════════════════════════════════════════════════
 //  DRAMATIC REVEAL
 // ══════════════════════════════════════════════════════════════════
 
@@ -1611,7 +1796,6 @@ const SUSPENSE_PHRASES_FINAL = [
 ];
 
 async function triggerReveal() {
-  // Fetch latest from Firebase
   if (FB.connected) {
     const remote = await FB.read();
     if (remote) applyRemoteState(remote);
@@ -1623,15 +1807,9 @@ async function triggerReveal() {
     return;
   }
 
-  // Store previous ranks for this reveal
-  const prevRanked = getRankedTeams();
-  prevRanked.forEach((team, i) => { state.previousRanks[team.idx] = i + 1; });
-
-  // Determine if this is the final round
   const isMega = state.teams.some((_, i) => state.scores[i] && state.scores[i].Mega);
   const phrases = isMega ? SUSPENSE_PHRASES_FINAL : SUSPENSE_PHRASES;
 
-  // Hide landing, show suspense
   document.getElementById('revealLanding').style.display = 'none';
   document.getElementById('leaderboardSection').style.display = 'none';
 
@@ -1640,15 +1818,14 @@ async function triggerReveal() {
   const suspenseSub = document.getElementById('suspenseSub');
 
   overlay.classList.add('show');
+  AudioFX.drumroll(phrases.length * 1200);
 
-  // Cycle through suspense phrases
   for (let i = 0; i < phrases.length; i++) {
     suspenseText.textContent = phrases[i];
     suspenseSub.textContent = '';
     await sleep(1200);
   }
 
-  // Brief dark pause
   suspenseText.textContent = '';
   suspenseSub.textContent = '';
   await sleep(600);
@@ -1656,7 +1833,6 @@ async function triggerReveal() {
   overlay.classList.remove('show');
   await sleep(400);
 
-  // Show leaderboard section and perform animated reveal
   document.getElementById('leaderboardSection').style.display = 'block';
   await performShuffleReveal(isMega);
 }
@@ -1671,89 +1847,199 @@ async function performShuffleReveal(isMega) {
   grid.className = 'leaderboard-grid' + (useTwoCol ? ' two-col' : '');
   grid.innerHTML = '';
 
-  // First: render teams in their PREVIOUS order (or alphabetical if first reveal)
+  // ── Phase 1: Render in PREVIOUS order, scores hidden ─────────────
+  // Sort by previous reveal order; first reveal falls back to registration order (idx)
   const prevOrder = [...ranked].sort((a, b) => {
-    const pa = state.previousRanks[a.idx] || 999;
-    const pb = state.previousRanks[b.idx] || 999;
+    const pa = state.previousRanks[a.idx] ?? (a.idx + 1);
+    const pb = state.previousRanks[b.idx] ?? (b.idx + 1);
     return pa - pb;
   });
 
-  // Build rows with old totals first
   if (useTwoCol) {
     const half = Math.ceil(prevOrder.length / 2);
-    [prevOrder.slice(0, half), prevOrder.slice(half)].forEach((col, colIdx) => {
+    [prevOrder.slice(0, half), prevOrder.slice(half)].forEach((col, ci) => {
       const colDiv = document.createElement('div');
-      appendRevealColumn(colDiv, col, colIdx === 0 ? 0 : half, true);
+      appendRevealColumn(colDiv, col, ci === 0 ? 0 : half, true);
       grid.appendChild(colDiv);
     });
   } else {
     appendRevealColumn(grid, prevOrder, 0, true);
   }
 
-  // Let them see the old order briefly
-  await sleep(800);
+  await sleep(700);
 
-  // Now: animate to new positions by re-rendering in new order
-  grid.innerHTML = '';
-  if (useTwoCol) {
-    const half = Math.ceil(ranked.length / 2);
-    [ranked.slice(0, half), ranked.slice(half)].forEach((col, colIdx) => {
-      const colDiv = document.createElement('div');
-      appendRevealColumn(colDiv, col, colIdx === 0 ? 0 : half, false);
-      grid.appendChild(colDiv);
-    });
-  } else {
-    appendRevealColumn(grid, ranked, 0, false);
-  }
-
-  // Stagger row appearance
-  const rows = grid.querySelectorAll('.lb-row');
-  rows.forEach(r => { r.style.opacity = '0'; r.style.transform = 'translateX(-30px)'; });
-
-  for (let i = 0; i < rows.length; i++) {
-    await sleep(80);
-    rows[i].style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    rows[i].style.opacity = '1';
-    rows[i].style.transform = 'translateX(0)';
-
-    // Apply glow for movers
-    const teamIdx = parseInt(rows[i].dataset.teamIdx);
-    const globalRank = parseInt(rows[i].dataset.globalRank);
-    const prevRank = state.previousRanks[teamIdx];
-    if (prevRank !== undefined) {
-      if (prevRank > globalRank) rows[i].classList.add('shuffle-up');
-      else if (prevRank < globalRank) rows[i].classList.add('shuffle-down');
-    }
-  }
-
-  // Count up totals
-  await sleep(400);
-  const totals = grid.querySelectorAll('.lb-row .total');
-  totals.forEach(el => {
-    const target = parseInt(el.dataset.target) || 0;
-    const movementSpan = el.querySelector('.movement');
-    const movementHtml = movementSpan ? movementSpan.outerHTML : '';
-    el.classList.add('counting');
-    el.innerHTML = '0' + movementHtml;
-    animateNumber(el, 0, target, 1000);
-    setTimeout(() => el.classList.remove('counting'), 1100);
+  // ── Phase 2: Count up scores ──────────────────────────────────────
+  const allRows = Array.from(grid.querySelectorAll('.lb-row'));
+  allRows.forEach((row, i) => {
+    const teamIdx = parseInt(row.dataset.teamIdx);
+    const team = ranked.find(t => t.idx === teamIdx);
+    if (!team) return;
+    const totalEl = row.querySelector('.total');
+    if (!totalEl) return;
+    setTimeout(() => {
+      totalEl.classList.add('counting');
+      totalEl.innerHTML = '0';
+      animateNumber(totalEl, 0, team.total, 1200);
+      setTimeout(() => totalEl.classList.remove('counting'), 1300);
+    }, i * 55);
   });
 
-  await sleep(1200);
+  await sleep(1900);
 
-  // Flash all rows
-  rows.forEach(r => r.classList.add('flash'));
+  // ── Phase 3: FLIP shuffle (single-col) or stagger (two-col) ──────
+  if (!useTwoCol) {
+    // FIRST — record current row top positions
+    const rowEls = Array.from(grid.querySelectorAll('.lb-row'));
+    const firstPos = {};
+    rowEls.forEach(row => { firstPos[row.dataset.teamIdx] = row.getBoundingClientRect().top; });
 
-  // Update previous ranks for next reveal
+    // Build a map of teamIdx → row element
+    const rowMap = {};
+    rowEls.forEach(row => { rowMap[row.dataset.teamIdx] = row; });
+
+    // LAST — rebuild grid in new ranked order (keep header)
+    const oldHeader = grid.querySelector('.lb-header');
+    grid.innerHTML = '';
+    if (oldHeader) grid.appendChild(oldHeader);
+
+    ranked.forEach((team, i) => {
+      const row = rowMap[team.idx];
+      if (!row) return;
+      const rankEl = row.querySelector('.rank');
+      if (rankEl) rankEl.textContent = i + 1;
+      row.classList.remove('rank-1','rank-2','rank-3','climbing','falling','shuffle-up','shuffle-down','champion');
+      row.dataset.globalRank = i + 1;
+      grid.appendChild(row);
+    });
+
+    // Force layout recalc (LAST positions now readable)
+    grid.offsetHeight;
+
+    const lastPos = {};
+    Array.from(grid.querySelectorAll('.lb-row')).forEach(row => {
+      lastPos[row.dataset.teamIdx] = row.getBoundingClientRect().top;
+    });
+
+    // INVERT — apply offset transforms instantly
+    Array.from(grid.querySelectorAll('.lb-row')).forEach(row => {
+      const delta = (firstPos[row.dataset.teamIdx] || 0) - (lastPos[row.dataset.teamIdx] || 0);
+      if (Math.abs(delta) > 5) {
+        row.style.transition = 'none';
+        row.style.transform = `translateY(${delta}px)`;
+      }
+    });
+
+    grid.offsetHeight; // second forced reflow
+
+    // PLAY — animate each row to its final position, staggered
+    const movers = Array.from(grid.querySelectorAll('.lb-row')).filter(r => r.style.transform);
+    movers.forEach((row, i) => {
+      const delta = (firstPos[row.dataset.teamIdx] || 0) - (lastPos[row.dataset.teamIdx] || 0);
+      setTimeout(() => {
+        row.style.transition = 'transform 0.95s cubic-bezier(0.25,0.46,0.45,0.94)';
+        row.style.transform = 'translateY(0)';
+        if (delta > 28) {
+          row.classList.add('climbing');
+          setTimeout(() => AudioFX.whooshUp(), 120);
+        } else if (delta < -28) {
+          row.classList.add('falling');
+          setTimeout(() => AudioFX.whooshDown(), 120);
+        }
+      }, i * 75);
+    });
+
+    await sleep(1300);
+
+    // Clean up inline styles
+    Array.from(grid.querySelectorAll('.lb-row')).forEach(row => {
+      row.style.transition = '';
+      row.style.transform = '';
+    });
+
+    await sleep(300);
+
+    // ── Phase 4: Podium reveals — 3rd, 2nd, 1st ─────────────────
+    if (ranked.length >= 3) {
+      await revealPodiumPosition(grid, ranked[2], 3);
+      await sleep(1400);
+      await revealPodiumPosition(grid, ranked[1], 2);
+      await sleep(1700);
+    } else if (ranked.length === 2) {
+      await revealPodiumPosition(grid, ranked[1], 2);
+      await sleep(1700);
+    }
+    await revealPodiumPosition(grid, ranked[0], 1, isMega);
+
+  } else {
+    // Two-col: stagger reveal then podium treatment at end
+    grid.innerHTML = '';
+    const half = Math.ceil(ranked.length / 2);
+    [ranked.slice(0, half), ranked.slice(half)].forEach((col, ci) => {
+      const colDiv = document.createElement('div');
+      appendRevealColumn(colDiv, col, ci === 0 ? 0 : half, false);
+      grid.appendChild(colDiv);
+    });
+
+    const rows = Array.from(grid.querySelectorAll('.lb-row'));
+    rows.forEach(r => { r.style.opacity = '0'; r.style.transform = 'translateX(-30px)'; });
+    for (let i = 0; i < rows.length; i++) {
+      await sleep(70);
+      rows[i].style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+      rows[i].style.opacity = '1';
+      rows[i].style.transform = 'translateX(0)';
+    }
+    await sleep(500);
+
+    // Podium treatment: glow the top 3 rows regardless of column
+    AudioFX.chime(523);
+    const bronze = grid.querySelector('.lb-row.rank-3');
+    if (bronze) bronze.classList.add('podium-pop');
+    await sleep(1200);
+    AudioFX.silverFanfare();
+    const silver = grid.querySelector('.lb-row.rank-2');
+    if (silver) silver.classList.add('podium-pop');
+    await sleep(1400);
+    AudioFX.goldFanfare();
+    const gold = grid.querySelector('.lb-row.rank-1');
+    if (gold) { gold.classList.add('champion', 'podium-pop'); }
+  }
+
   ranked.forEach((team, i) => { state.previousRanks[team.idx] = i + 1; });
 
-  // Winner banner for final round
   if (isMega && ranked.length > 0) {
-    await sleep(800);
+    await sleep(900);
     document.getElementById('winnerName').textContent = ranked[0].name;
     document.getElementById('winnerBanner').classList.add('show');
     await sleep(600);
     launchConfetti();
+  }
+}
+
+async function revealPodiumPosition(grid, team, rank, isChampion = false) {
+  const row = grid.querySelector(`[data-team-idx="${team.idx}"]`);
+  if (!row) return;
+
+  const rankEl = row.querySelector('.rank');
+
+  if (rank === 3) {
+    row.classList.add('rank-3', 'podium-pop');
+    AudioFX.chime(523);
+    if (rankEl) rankEl.innerHTML = `3<span class="medal-badge">&#x1F949;</span>`;
+
+  } else if (rank === 2) {
+    row.classList.add('rank-2', 'podium-pop');
+    AudioFX.silverFanfare();
+    if (rankEl) rankEl.innerHTML = `2<span class="medal-badge">&#x1F948;</span>`;
+
+  } else if (rank === 1) {
+    row.classList.add('rank-1', 'champion', 'podium-pop');
+    AudioFX.goldFanfare();
+    if (rankEl) rankEl.innerHTML = `1<span class="crown-badge">&#x1F451;</span>`;
+    if (!isChampion) {
+      // non-final round: fire a small confetti burst
+      await sleep(400);
+      launchConfetti(120);
+    }
   }
 }
 
@@ -1816,14 +2102,14 @@ function animateNumber(el, from, to, duration) {
 //  CONFETTI
 // ══════════════════════════════════════════════════════════════════
 
-function launchConfetti() {
+function launchConfetti(count = 380) {
   const canvas = document.getElementById('confetti-canvas');
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  const colors = ['#1B90FF', '#0070F2', '#89D1FF', '#D1EFFF', '#002A86', '#FFFFFF', '#FFD700'];
+  const colors = ['#1B90FF', '#0070F2', '#89D1FF', '#D1EFFF', '#002A86', '#FFFFFF', '#FFD700', '#F59E0B', '#FCD34D'];
   const particles = [];
-  for (let i = 0; i < 350; i++) {
+  for (let i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height - canvas.height,
@@ -1902,9 +2188,11 @@ function showToast(msg) {
   toast.textContent = msg;
   Object.assign(toast.style, {
     position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
-    background: 'var(--sap-blue)', color: '#FFFFFF', padding: '10px 28px',
-    borderRadius: '8px', fontWeight: '700', fontSize: '14px', zIndex: '500',
-    fontFamily: 'Inter, sans-serif', boxShadow: '0 4px 20px rgba(0,10,40,0.4)'
+    background: 'linear-gradient(135deg, #0070F2, #1B90FF)',
+    color: '#FFFFFF', padding: '10px 28px',
+    borderRadius: '10px', fontWeight: '700', fontSize: '14px', zIndex: '500',
+    fontFamily: 'Inter, sans-serif', boxShadow: '0 4px 24px rgba(27,144,255,0.45)',
+    letterSpacing: '0.5px'
   });
   document.body.appendChild(toast);
   setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s'; }, 1500);
@@ -1970,7 +2258,6 @@ function copyRegLink() {
           renderScoreInputs();
         } else if (panelId === 'leaderboard') {
           updateRevealLanding();
-          // Don't auto-update leaderboard during a reveal — only update the landing
         } else if (panelId === 'register') {
           updateRegTeamCount();
           if (!state.registrationOpen) {
