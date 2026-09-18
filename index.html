@@ -748,74 +748,6 @@
     50%      { opacity: 1; }
   }
 
-  /* ── PIN Gate ────────────────────────────────────────────────────── */
-  .pin-overlay {
-    position: fixed; inset: 0;
-    background: rgba(1,8,18,0.96);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 9999;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s;
-  }
-  .pin-overlay.show { opacity: 1; pointer-events: all; }
-  .pin-box {
-    background: var(--bg-panel);
-    border: 1px solid var(--border-blue);
-    border-radius: 20px;
-    padding: 40px 48px;
-    text-align: center;
-    max-width: 360px;
-    width: 90%;
-    box-shadow: 0 0 60px rgba(27,144,255,0.15);
-  }
-  .pin-box.shake {
-    animation: pinShake 0.45s cubic-bezier(0.36,0.07,0.19,0.97);
-  }
-  @keyframes pinShake {
-    10%,90%  { transform: translateX(-4px); }
-    20%,80%  { transform: translateX(6px); }
-    30%,50%,70% { transform: translateX(-6px); }
-    40%,60%  { transform: translateX(6px); }
-  }
-  .pin-title {
-    font-size: 20px; font-weight: 900; color: var(--text-primary);
-    margin-bottom: 8px; letter-spacing: 1px;
-  }
-  .pin-subtitle {
-    font-size: 13px; color: var(--text-dim);
-    margin-bottom: 24px; letter-spacing: 1px;
-  }
-  .pin-input {
-    width: 100%;
-    padding: 12px 16px;
-    background: var(--input-bg);
-    border: 1px solid var(--border-blue-mid);
-    border-radius: 10px;
-    color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
-    font-size: 20px;
-    text-align: center;
-    letter-spacing: 6px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    margin-bottom: 16px;
-  }
-  .pin-input:focus { border-color: var(--sap-blue); box-shadow: 0 0 14px rgba(27,144,255,0.25); }
-  .pin-submit {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, var(--sap-blue-dark), var(--sap-blue));
-    color: white; border: none; border-radius: 10px;
-    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 18px rgba(27,144,255,0.35);
-  }
-  .pin-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 26px rgba(27,144,255,0.5); }
-  .pin-error {
-    margin-top: 12px; font-size: 12px; color: var(--red-down);
-    font-weight: 600; min-height: 16px; letter-spacing: 0.5px;
-  }
-
   /* ── Reveal Landing ──────────────────────────────────────────────── */
   .reveal-landing {
     display: flex;
@@ -1052,16 +984,6 @@
 
 <div class="sync-status" id="syncStatus">
   <span class="dot warn"></span> <span id="syncMsg">Connecting to Firebase...</span>
-</div>
-
-<div id="pinOverlay" class="pin-overlay">
-  <div class="pin-box" id="pinBox">
-    <div class="pin-title">🔒 Admin Access</div>
-    <div class="pin-subtitle">Enter PIN to continue</div>
-    <input id="pinInput" class="pin-input" type="password" maxlength="8" placeholder="••••" autocomplete="off">
-    <button class="pin-submit" onclick="submitPin()">Continue</button>
-    <div id="pinError" class="pin-error"></div>
-  </div>
 </div>
 
 <div class="nav-tabs" id="navTabs">
@@ -1387,8 +1309,6 @@ function setSyncStatus(level, msg) {
 // ══════════════════════════════════════════════════════════════════
 //  NAV
 // ══════════════════════════════════════════════════════════════════
-
-const ADMIN_PIN = '2026'; // Change this to your preferred PIN
 
 const ENTRY_MODE = (() => {
   const h = window.location.hash.replace('#', '').toLowerCase();
@@ -2592,36 +2512,6 @@ function copyRegLink() {
 // ══════════════════════════════════════════════════════════════════
 
 (async function init() {
-  if (ENTRY_MODE === 'admin' && !sessionStorage.getItem('trivia_admin_auth')) {
-    const overlay = document.getElementById('pinOverlay');
-    overlay.classList.add('show');
-    setTimeout(() => document.getElementById('pinInput')?.focus(), 300);
-    document.getElementById('pinInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') submitPin();
-    });
-    return;
-  }
-  startApp();
-})();
-
-function submitPin() {
-  const input = document.getElementById('pinInput');
-  const err   = document.getElementById('pinError');
-  const box   = document.getElementById('pinBox');
-  if (input.value === ADMIN_PIN) {
-    sessionStorage.setItem('trivia_admin_auth', '1');
-    document.getElementById('pinOverlay').classList.remove('show');
-    startApp();
-  } else {
-    err.textContent = 'Incorrect PIN — try again';
-    input.value = '';
-    input.focus();
-    box.classList.add('shake');
-    setTimeout(() => box.classList.remove('shake'), 500);
-  }
-}
-
-async function startApp() {
   const fbOk = FB.init();
 
   if (fbOk) {
@@ -2668,7 +2558,7 @@ async function startApp() {
 
   activateView(view);
   renderAll();
-}
+})();
 </script>
 </body>
 </html>
