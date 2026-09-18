@@ -297,6 +297,79 @@
     transition: all 0.2s;
   }
   .reg-table .remove-btn:hover { background: var(--red-down); color: white; border-color: var(--red-down); }
+  .reg-table .edit-btn {
+    background: none;
+    border: 1px solid var(--border-blue-mid);
+    color: var(--sap-light-blue);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    transition: all 0.2s;
+    margin-right: 5px;
+  }
+  .reg-table .edit-btn:hover { background: rgba(27,144,255,0.15); border-color: var(--sap-blue); }
+  .reg-table .action-cell { display: flex; gap: 5px; align-items: center; }
+  .edit-row-cell { padding: 12px 10px !important; }
+  .edit-row-inner { display: flex; flex-direction: column; gap: 10px; }
+  .edit-team-name-input {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--amber-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .edit-team-name-input:focus { border-color: var(--amber); box-shadow: 0 0 10px var(--amber-glow); }
+  .edit-members-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .edit-member-input {
+    padding: 7px 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-blue);
+    border-radius: 7px;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .edit-member-input:focus { border-color: var(--sap-blue); box-shadow: 0 0 8px rgba(27,144,255,0.2); }
+  .edit-member-input::placeholder { color: var(--text-dim); }
+  .edit-actions { display: flex; gap: 8px; margin-top: 2px; }
+  .save-edit-btn {
+    padding: 6px 18px;
+    background: linear-gradient(135deg, var(--sap-blue-dark), var(--sap-blue));
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(27,144,255,0.3);
+  }
+  .save-edit-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(27,144,255,0.45); }
+  .cancel-edit-btn {
+    padding: 6px 14px;
+    background: none;
+    border: 1px solid var(--border-blue);
+    color: var(--text-secondary);
+    border-radius: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cancel-edit-btn:hover { background: rgba(255,255,255,0.05); }
   .reg-count { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
 
   /* ── Score Entry ─────────────────────────────────────────────────── */
@@ -968,7 +1041,7 @@
     <div class="reg-count" id="adminRegCount">0 teams registered</div>
     <div id="adminRegTable"></div>
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="addManualTeam()">+ Add Team Manually</button>
+      <button id="addTeamBtn" class="btn btn-primary" onclick="startAddTeam()">+ Add Team Manually</button>
     </div>
   </div>
 
@@ -1350,6 +1423,9 @@ function updateRegTeamCount() {
 //  ADMIN: TEAM MANAGEMENT
 // ══════════════════════════════════════════════════════════════════
 
+let _editingTeamIdx = null;
+let _addingTeam = false;
+
 function renderAdminTeams() {
   const countEl = document.getElementById('adminRegCount');
   const tableEl = document.getElementById('adminRegTable');
@@ -1358,24 +1434,97 @@ function renderAdminTeams() {
   countEl.textContent = state.registrations.length + ' team' + (state.registrations.length !== 1 ? 's' : '') + ' registered';
 
   if (state.registrations.length === 0) {
-    tableEl.innerHTML = '<p style="color:var(--text-dim); font-size:13px;">No teams registered yet. Share the registration link or add teams manually.</p>';
+    let emptyHtml = '<p style="color:var(--text-dim); font-size:13px;">No teams registered yet. Share the registration link or add teams manually.</p>';
+    if (_addingTeam) {
+      emptyHtml += `<div class="edit-row-inner" style="padding:14px 6px 6px;">
+        <input id="newTeamName" class="edit-team-name-input" type="text" placeholder="Team name" maxlength="40">
+        <div class="edit-members-grid">
+          <input id="newMember_0" class="edit-member-input" type="text" placeholder="Member 1 (optional)" maxlength="40">
+          <input id="newMember_1" class="edit-member-input" type="text" placeholder="Member 2 (optional)" maxlength="40">
+          <input id="newMember_2" class="edit-member-input" type="text" placeholder="Member 3 (optional)" maxlength="40">
+          <input id="newMember_3" class="edit-member-input" type="text" placeholder="Member 4 (optional)" maxlength="40">
+        </div>
+        <div class="edit-actions">
+          <button class="save-edit-btn" onclick="saveNewTeam()">Add Team</button>
+          <button class="cancel-edit-btn" onclick="cancelAddTeam()">Cancel</button>
+        </div>
+      </div>`;
+    }
+    tableEl.innerHTML = emptyHtml;
+    const addBtn = document.getElementById('addTeamBtn');
+    if (addBtn) addBtn.style.display = _addingTeam ? 'none' : '';
+    if (_addingTeam) { const n = document.getElementById('newTeamName'); if (n) n.focus(); }
     return;
   }
 
   let html = '<table class="reg-table"><thead><tr><th>#</th><th>Team Name</th><th>Members</th><th></th></tr></thead><tbody>';
   state.registrations.forEach((reg, i) => {
-    const membersStr = reg.members && reg.members.length > 0
-      ? reg.members.map(m => escapeHtml(m)).join(', ')
-      : '<em>-</em>';
-    html += `<tr>
-      <td>${i + 1}</td>
-      <td><strong>${escapeHtml(reg.teamName)}</strong></td>
-      <td class="members">${membersStr}</td>
-      <td><button class="remove-btn" onclick="removeTeam(${i})">Remove</button></td>
-    </tr>`;
+    if (i === _editingTeamIdx) {
+      const m = reg.members || [];
+      html += `<tr>
+        <td>${i + 1}</td>
+        <td colspan="2" class="edit-row-cell">
+          <div class="edit-row-inner">
+            <input id="editTeamName_${i}" class="edit-team-name-input" type="text" value="${escapeHtml(reg.teamName)}" placeholder="Team name" maxlength="40">
+            <div class="edit-members-grid">
+              <input id="editMember_${i}_0" class="edit-member-input" type="text" value="${escapeHtml(m[0] || '')}" placeholder="Member 1 (optional)" maxlength="40">
+              <input id="editMember_${i}_1" class="edit-member-input" type="text" value="${escapeHtml(m[1] || '')}" placeholder="Member 2 (optional)" maxlength="40">
+              <input id="editMember_${i}_2" class="edit-member-input" type="text" value="${escapeHtml(m[2] || '')}" placeholder="Member 3 (optional)" maxlength="40">
+              <input id="editMember_${i}_3" class="edit-member-input" type="text" value="${escapeHtml(m[3] || '')}" placeholder="Member 4 (optional)" maxlength="40">
+            </div>
+            <div class="edit-actions">
+              <button class="save-edit-btn" onclick="saveTeamEdit(${i})">Save</button>
+              <button class="cancel-edit-btn" onclick="cancelTeamEdit()">Cancel</button>
+            </div>
+          </div>
+        </td>
+        <td></td>
+      </tr>`;
+    } else {
+      const membersStr = reg.members && reg.members.length > 0
+        ? reg.members.map(m => escapeHtml(m)).join(', ')
+        : '<em>-</em>';
+      html += `<tr>
+        <td>${i + 1}</td>
+        <td><strong>${escapeHtml(reg.teamName)}</strong></td>
+        <td class="members">${membersStr}</td>
+        <td><div class="action-cell">
+          <button class="edit-btn" onclick="editTeam(${i})">Edit</button>
+          <button class="remove-btn" onclick="removeTeam(${i})">Remove</button>
+        </div></td>
+      </tr>`;
+    }
   });
   html += '</tbody></table>';
+
+  if (_addingTeam) {
+    html += `<div class="edit-row-inner" style="padding:14px 6px 6px;">
+      <input id="newTeamName" class="edit-team-name-input" type="text" placeholder="Team name" maxlength="40">
+      <div class="edit-members-grid">
+        <input id="newMember_0" class="edit-member-input" type="text" placeholder="Member 1 (optional)" maxlength="40">
+        <input id="newMember_1" class="edit-member-input" type="text" placeholder="Member 2 (optional)" maxlength="40">
+        <input id="newMember_2" class="edit-member-input" type="text" placeholder="Member 3 (optional)" maxlength="40">
+        <input id="newMember_3" class="edit-member-input" type="text" placeholder="Member 4 (optional)" maxlength="40">
+      </div>
+      <div class="edit-actions">
+        <button class="save-edit-btn" onclick="saveNewTeam()">Add Team</button>
+        <button class="cancel-edit-btn" onclick="cancelAddTeam()">Cancel</button>
+      </div>
+    </div>`;
+  }
+
   tableEl.innerHTML = html;
+
+  const addBtn = document.getElementById('addTeamBtn');
+  if (addBtn) addBtn.style.display = _addingTeam ? 'none' : '';
+
+  if (_editingTeamIdx !== null) {
+    const nameInput = document.getElementById(`editTeamName_${_editingTeamIdx}`);
+    if (nameInput) { nameInput.focus(); nameInput.select(); }
+  } else if (_addingTeam) {
+    const nameInput = document.getElementById('newTeamName');
+    if (nameInput) nameInput.focus();
+  }
 
   const toggle = document.getElementById('regLockToggle');
   const lockLabel = toggle.nextElementSibling;
@@ -1386,6 +1535,41 @@ function renderAdminTeams() {
     toggle.classList.add('on');
     lockLabel.textContent = 'Registration locked — no new teams can register';
   }
+}
+
+function editTeam(idx) {
+  _editingTeamIdx = idx;
+  renderAdminTeams();
+}
+
+function cancelTeamEdit() {
+  _editingTeamIdx = null;
+  renderAdminTeams();
+}
+
+async function saveTeamEdit(idx) {
+  const nameInput = document.getElementById(`editTeamName_${idx}`);
+  if (!nameInput) return;
+
+  const newName = nameInput.value.trim();
+  if (!newName) { showToast('Team name cannot be empty', 'error'); return; }
+
+  const duplicate = state.registrations.some((r, i) =>
+    i !== idx && r.teamName.trim().toLowerCase() === newName.toLowerCase()
+  );
+  if (duplicate) { showToast('That team name is already taken', 'error'); return; }
+
+  const members = [0, 1, 2, 3]
+    .map(j => document.getElementById(`editMember_${idx}_${j}`)?.value.trim() || '')
+    .filter(v => v.length > 0);
+
+  state.registrations[idx].teamName = newName;
+  state.registrations[idx].members = members;
+
+  _editingTeamIdx = null;
+  await saveState();
+  renderAll();
+  showToast(`"${newName}" updated`);
 }
 
 async function toggleRegistrationLock() {
@@ -1415,27 +1599,39 @@ async function removeTeam(idx) {
   showToast(`"${teamName}" removed`);
 }
 
-async function addManualTeam() {
-  const teamName = prompt('Enter team name:');
-  if (!teamName || !teamName.trim()) return;
+function startAddTeam() {
+  _addingTeam = true;
+  _editingTeamIdx = null;
+  renderAdminTeams();
+}
+
+function cancelAddTeam() {
+  _addingTeam = false;
+  renderAdminTeams();
+}
+
+async function saveNewTeam() {
+  const nameInput = document.getElementById('newTeamName');
+  if (!nameInput) return;
+
+  const newName = nameInput.value.trim();
+  if (!newName) { showToast('Team name cannot be empty', 'error'); nameInput.focus(); return; }
 
   const duplicate = state.registrations.some(r =>
-    r.teamName.toLowerCase() === teamName.trim().toLowerCase()
+    r.teamName.trim().toLowerCase() === newName.toLowerCase()
   );
-  if (duplicate) {
-    showToast('That team name already exists');
-    return;
-  }
+  if (duplicate) { showToast('That team name already exists', 'error'); nameInput.focus(); return; }
 
-  state.registrations.push({
-    teamName: teamName.trim(),
-    members: [],
-    timestamp: new Date().toISOString()
-  });
+  const members = [0, 1, 2, 3]
+    .map(j => document.getElementById(`newMember_${j}`)?.value.trim() || '')
+    .filter(v => v.length > 0);
 
+  state.registrations.push({ teamName: newName, members, timestamp: new Date().toISOString() });
+
+  _addingTeam = false;
   await saveState();
   renderAll();
-  showToast(`"${teamName.trim()}" added`);
+  showToast(`"${newName}" added`);
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1780,20 +1976,37 @@ const AudioFX = {
 //  DRAMATIC REVEAL
 // ══════════════════════════════════════════════════════════════════
 
-const SUSPENSE_PHRASES = [
-  'Calculating scores...',
+const SUSPENSE_POOL = [
   'Crunching the numbers...',
   'Shuffling the ladder...',
   'Who will rise?',
-  'Who will fall?'
+  'Who will fall?',
+  'The table is about to shift...',
+  'Brace yourselves...',
+  'Points don\'t lie...',
+  'Can anyone catch them?',
+  'Some teams are on the move...',
+  'The scores are in...',
+  'Here we go...',
+  'No pressure...',
 ];
 
-const SUSPENSE_PHRASES_FINAL = [
+const SUSPENSE_POOL_FINAL = [
   'This is it...',
   'The moment of truth...',
-  'Tallying final scores...',
-  'And the winners are...'
+  'Everything\'s on the line...',
+  'It all comes down to this...',
+  'One last time...',
+  'The final scores are in...',
+  'Who takes the crown?',
+  'And the winners are...',
 ];
+
+function pickSuspensePhrases(isMega) {
+  const pool = isMega ? SUSPENSE_POOL_FINAL : SUSPENSE_POOL;
+  const count = isMega ? 2 : (2 + Math.floor(Math.random() * 2));
+  return [...pool].sort(() => Math.random() - 0.5).slice(0, count);
+}
 
 async function triggerReveal() {
   if (FB.connected) {
@@ -1808,7 +2021,7 @@ async function triggerReveal() {
   }
 
   const isMega = state.teams.some((_, i) => state.scores[i] && state.scores[i].Mega);
-  const phrases = isMega ? SUSPENSE_PHRASES_FINAL : SUSPENSE_PHRASES;
+  const phrases = pickSuspensePhrases(isMega);
 
   document.getElementById('revealLanding').style.display = 'none';
   document.getElementById('leaderboardSection').style.display = 'none';
@@ -1818,12 +2031,12 @@ async function triggerReveal() {
   const suspenseSub = document.getElementById('suspenseSub');
 
   overlay.classList.add('show');
-  AudioFX.drumroll(phrases.length * 1200);
+  AudioFX.drumroll(phrases.length * 2000);
 
   for (let i = 0; i < phrases.length; i++) {
     suspenseText.textContent = phrases[i];
     suspenseSub.textContent = '';
-    await sleep(1200);
+    await sleep(2000);
   }
 
   suspenseText.textContent = '';
@@ -1933,10 +2146,12 @@ async function performShuffleReveal(isMega) {
 
     // PLAY — animate each row to its final position, staggered
     const movers = Array.from(grid.querySelectorAll('.lb-row')).filter(r => r.style.transform);
+    const FLIP_DURATION = 1800;
+    const FLIP_STAGGER  = 120;
     movers.forEach((row, i) => {
       const delta = (firstPos[row.dataset.teamIdx] || 0) - (lastPos[row.dataset.teamIdx] || 0);
       setTimeout(() => {
-        row.style.transition = 'transform 0.95s cubic-bezier(0.25,0.46,0.45,0.94)';
+        row.style.transition = `transform ${FLIP_DURATION}ms cubic-bezier(0.25,0.46,0.45,0.94)`;
         row.style.transform = 'translateY(0)';
         if (delta > 28) {
           row.classList.add('climbing');
@@ -1945,10 +2160,10 @@ async function performShuffleReveal(isMega) {
           row.classList.add('falling');
           setTimeout(() => AudioFX.whooshDown(), 120);
         }
-      }, i * 75);
+      }, i * FLIP_STAGGER);
     });
 
-    await sleep(1300);
+    await sleep(movers.length * FLIP_STAGGER + FLIP_DURATION + 500);
 
     // Clean up inline styles
     Array.from(grid.querySelectorAll('.lb-row')).forEach(row => {
@@ -2034,7 +2249,9 @@ async function revealPodiumPosition(grid, team, rank, isChampion = false) {
   } else if (rank === 1) {
     row.classList.add('rank-1', 'champion', 'podium-pop');
     AudioFX.goldFanfare();
-    if (rankEl) rankEl.innerHTML = `1<span class="crown-badge">&#x1F451;</span>`;
+    if (rankEl) rankEl.innerHTML = isChampion
+      ? `1<span class="crown-badge">&#x1F451;</span>`
+      : `1<span class="medal-badge">&#x1F947;</span>`;
     if (!isChampion) {
       // non-final round: fire a small confetti burst
       await sleep(400);
